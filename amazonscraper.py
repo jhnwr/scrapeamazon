@@ -1,4 +1,5 @@
 from requests_html import HTMLSession
+import pandas as pd
 
 urls = ['https://www.amazon.co.uk/Samsung-TU7100-Smart-CARBON-SILVER/dp/B086WGXQFZ/ref=sr_1_2?dchild=1&keywords=tv&qid=1601927782&refinements=p_n_size_browse-bin%3A9591881031&rnid=161398031&s=home-theater&sr=1-2',
           'https://www.amazon.co.uk/Samsung-TU7100-HDR-Smart-Tizen/dp/B086T39T5D/ref=sr_1_3?dchild=1&keywords=tv&qid=1601927782&refinements=p_n_size_browse-bin%3A9591881031&rnid=161398031&s=home-theater&sr=1-3',
@@ -8,11 +9,18 @@ def getPrice(url):
     s = HTMLSession()
     r = s.get(url)
     r.html.render(sleep=1)
-    product = {
-        'title': r.html.xpath('//*[@id="productTitle"]', first=True).text,
-        'price': r.html.xpath('//*[@id="priceblock_ourprice"]', first=True).text
-    }
-    print(product)
+    try:
+        product = {
+            'title': r.html.xpath('//*[@id="productTitle"]', first=True).text,
+            'price': r.html.xpath('//*[@id="priceblock_ourprice"]', first=True).text
+        }
+        print(product)
+    except:
+        product = {
+            'title': r.html.xpath('//*[@id="productTitle"]', first=True).text,
+            'price': 'item unavailable'
+        }
+        print(product)
     return product
 
 tvprices = []
@@ -20,3 +28,6 @@ for url in urls:
     tvprices.append(getPrice(url))
 
 print(len(tvprices))
+
+pricesdf = pd.DataFrame(tvprices)
+pricesdf.to_excel('tvprices.xlsx', index=False)
