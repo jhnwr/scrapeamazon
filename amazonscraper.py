@@ -1,4 +1,5 @@
 from my_methods import getPrice, get_product_spec
+import pandas as pd
 
 # TODO create method to get a url list
 # This will also need to be a slow cralwer so as not to get detected
@@ -9,11 +10,23 @@ url3 = r'https://www.amazon.com/FitRight-Heavyweight-Cleansing-Unscented-Inconti
 
 url_list = [url1, url2, url3]
 
-spec_dict_list = []
+product_info_list = []
 
 for url in url_list:
-    spec_dict = get_product_spec(url)
-    spec_dict_list.append(spec_dict)
+    product_info = getPrice(url)
+    product_info_list.append(product_info)
 
-for gosh in spec_dict_list:
+for gosh in product_info_list:
     print(gosh)
+    
+product_1 = product_info_list[0]
+
+for item in product_1:
+    print(item, ': ', type(item))
+    
+
+df = pd.DataFrame(product_1, index=[0])
+
+path_out = r'/Users/ryancheng/Projects/scrapeamazon/df_results.csv'
+
+df.to_csv(path_out)

@@ -1,18 +1,19 @@
 from requests_html import HTMLSession
 import pandas as pd
 
-def getPrice(url):
-    s = HTMLSession()
-    r = s.get(url)
-    r.html.render(sleep=1)
-    product = {}
-    product['title'] = r.html.xpath('//*[@id="productTitle"]', first=True).text
-    product['price'] = r.html.xpath('//*[@id="priceblock_ourprice"]', first=True).text
-    product['shipping'] = r.html.xpath('//*[@id="price-shipping-message"]/b', first=True).text
-    # product[''] = r.html.xpath('', first=True).text
-    
-    # print(product)
-    return product
+def get_spec_dict(spec_list):
+    spec_dict = {}
+    for row in spec_list:
+        
+        row = row.split('\n')
+        key = row[0]
+        try:
+            val = str(row[1])
+        except:
+            val = None
+        spec_dict[key] = val
+
+    return spec_dict
 
 def get_xpath_list():
 
@@ -27,19 +28,30 @@ def get_xpath_list():
         
     return xpath_list
 
-def get_spec_dict(spec_list):
-    spec_dict = {}
-    for row in spec_list:
-        
-        row = row.split('\n')
-        key = row[0]
-        try:
-            val = row[1]
-        except:
-            val = None
-        spec_dict[key] = val
+def getPrice(url):
+    s = HTMLSession()
+    r = s.get(url)
+    r.html.render(sleep=1)
+    #get product_dict
+    product = {}
+    product['title'] = r.html.xpath('//*[@id="productTitle"]', first=True).text
+    product['price'] = r.html.xpath('//*[@id="priceblock_ourprice"]', first=True).text
+    product['shipping'] = r.html.xpath('//*[@id="price-shipping-message"]/b', first=True).text
 
-    return spec_dict
+    # get spec_list
+    spec_list = []
+    xpath_list = get_xpath_list()
+    for xpath_item in xpath_list:
+        try:
+            data = r.html.xpath(xpath_item, first=True).text
+            spec_list.append(data)
+        except:
+            break
+    spec_dict = get_spec_dict(spec_list)    
+    
+    product.update(spec_dict)
+    
+    return product
 
 def get_product_spec(url):
     s = HTMLSession()
