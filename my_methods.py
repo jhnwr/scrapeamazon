@@ -36,8 +36,10 @@ def getPrice(url):
     product = {}
     product['title'] = r.html.xpath('//*[@id="productTitle"]', first=True).text
     product['price'] = r.html.xpath('//*[@id="priceblock_ourprice"]', first=True).text
-    product['shipping'] = r.html.xpath('//*[@id="price-shipping-message"]/b', first=True).text
-
+    try:
+        product['shipping'] = r.html.xpath('//*[@id="price-shipping-message"]/b', first=True).text
+    except:
+        product['shipping'] = 'unable to get shipping info'
     # get spec_list
     spec_list = []
     xpath_list = get_xpath_list()

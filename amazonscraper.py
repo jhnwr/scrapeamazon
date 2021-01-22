@@ -16,17 +16,16 @@ for url in url_list:
     product_info = getPrice(url)
     product_info_list.append(product_info)
 
-for gosh in product_info_list:
-    print(gosh)
+df_list = []
+for product in product_info_list:
     
-product_1 = product_info_list[0]
-
-for item in product_1:
-    print(item, ': ', type(item))
+    df = pd.DataFrame(product, index=[0])
+    df_list.append(df)
     
-
-df = pd.DataFrame(product_1, index=[0])
+df = pd.concat(df_list)
 
 path_out = r'/Users/ryancheng/Projects/scrapeamazon/df_results.csv'
 
 df.to_csv(path_out)
+
+len(product_info_list)
