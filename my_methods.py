@@ -86,6 +86,26 @@ def get_search_urls(dept_url, num_pages = 155):
     return url_list
 
 # define fn that gets all product_urls from a search_url
+def get_prod_ulrs(search_url):
 
+    s = HTMLSession()
+    r = s.get(search_url)
+    r.html.render(sleep=1)
+
+    xpath = r'//*[@id="search"]/div[1]/div[2]/div/span[3]/div[2]/div'
+
+    deeper_xpath = r'//*[@id="search"]/div[1]/div[2]/div/span[3]/div/div/div/span/div/div/div/div/span/a'
+    results_page = r.html.xpath(deeper_xpath)
+
+    prod_url_list = []
+    for node in results_page:
+        
+        url_end = node.attrs['href']
+        url_base = r'https://www.amazon.com'
+        prod_url = url_base + url_end
+        prod_url_list.append(prod_url)
+
+
+    return prod_url_list
 
 # define fn that gets all dept urls from all search
