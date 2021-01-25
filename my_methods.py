@@ -17,7 +17,6 @@ def get_spec_dict(spec_list):
 
 def get_xpath_list():
 
-    xpath_base = r'//*[@id="product-specification-table"]/tbody/tr[1]'
     xpath_first_half = r'//*[@id="product-specification-table"]/tbody/tr['
     xpath_second_half = r']'
 
@@ -28,12 +27,14 @@ def get_xpath_list():
         
     return xpath_list
 
-def getPrice(url):
+#add element of seller - get //*[@id="bylineInfo"] and then get the href and get get store after /stores/
+def scrape_info(url):
     s = HTMLSession()
     r = s.get(url)
     r.html.render(sleep=1)
     #get product_dict
     product = {}
+    product['url'] = url
     product['title'] = r.html.xpath('//*[@id="productTitle"]', first=True).text
     product['price'] = r.html.xpath('//*[@id="priceblock_ourprice"]', first=True).text
     try:
@@ -55,23 +56,23 @@ def getPrice(url):
     
     return product
 
-def get_product_spec(url):
-    s = HTMLSession()
-    r = s.get(url)
-    r.html.render(sleep=1)
-    spec_list = []
-    xpath_list = get_xpath_list()
-    for xpath_item in xpath_list:
-        try:
-            data = r.html.xpath(xpath_item, first=True).text
-            spec_list.append(data)
-        except:
-            break
-    # product['row_1'] = r.html.xpath('//*[@id="product-specification-table"]/tbody/tr[1]', first=True).text
+# def get_product_spec(url):
+#     s = HTMLSession()
+#     r = s.get(url)
+#     r.html.render(sleep=1)
+#     spec_list = []
+#     xpath_list = get_xpath_list()
+#     for xpath_item in xpath_list:
+#         try:
+#             data = r.html.xpath(xpath_item, first=True).text
+#             spec_list.append(data)
+#         except:
+#             break
+#     # product['row_1'] = r.html.xpath('//*[@id="product-specification-table"]/tbody/tr[1]', first=True).text
 
-    spec_dict = get_spec_dict(spec_list)
+#     spec_dict = get_spec_dict(spec_list)
     
-    return spec_dict
+#     return spec_dict
 
 # define fn that gets number of pages
 
@@ -86,7 +87,7 @@ def get_search_urls(dept_url, num_pages = 155):
     return url_list
 
 # define fn that gets all product_urls from a search_url
-def get_prod_ulrs(search_url):
+def get_prod_urls(search_url):
 
     s = HTMLSession()
     r = s.get(search_url)
@@ -109,3 +110,5 @@ def get_prod_ulrs(search_url):
     return prod_url_list
 
 # define fn that gets all dept urls from all search
+
+#need to either remove sponsored pages, or scrape seller from the page
