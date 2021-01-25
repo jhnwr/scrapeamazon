@@ -73,5 +73,19 @@ def get_product_spec(url):
     
     return spec_dict
 
+# define fn that gets number of pages
 
-# //*[@id="product-specification-table"]/tbody/tr[1]/th
+# define fn that gets all search url pages from dept url
+def get_search_urls(dept_url, num_pages = 155):
+
+    url_list = []
+    for i in range(1,num_pages):
+        url = dept_url + str(i)
+        url_list.append(url)
+        
+    return url_list
+
+# define fn that gets all product_urls from a search_url
+
+
+# define fn that gets all dept urls from all search

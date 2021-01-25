@@ -29,3 +29,4 @@ path_out = r'/Users/ryancheng/Projects/scrapeamazon/df_results.csv'
 df.to_csv(path_out)
 
 len(product_info_list)
+
