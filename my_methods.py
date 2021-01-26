@@ -37,10 +37,25 @@ def scrape_info(url):
     product['url'] = url
     product['title'] = r.html.xpath('//*[@id="productTitle"]', first=True).text
     product['price'] = r.html.xpath('//*[@id="priceblock_ourprice"]', first=True).text
+    
+    string = r.html.xpath('//*[@id="bylineInfo"]', first = True).text
+    string = string.split('Visit the ')[1].split(' Store')[0]
+    product['seller'] = string 
+
     try:
         product['shipping'] = r.html.xpath('//*[@id="price-shipping-message"]/b', first=True).text
     except:
         product['shipping'] = 'unable to get shipping info'
+    
+    #get prod_details
+    xpath = r'//*[@id="detailBullets_feature_div"]/ul/li/span'
+    prod_details = r.html.xpath(xpath)
+    details_dict = {}
+    for prod in prod_details:
+        key, val = prod.text.split(' : ')
+        details_dict[key] = val
+    product.update(details_dict)
+    
     # get spec_list
     spec_list = []
     xpath_list = get_xpath_list()
@@ -51,28 +66,9 @@ def scrape_info(url):
         except:
             break
     spec_dict = get_spec_dict(spec_list)    
-    
     product.update(spec_dict)
     
     return product
-
-# def get_product_spec(url):
-#     s = HTMLSession()
-#     r = s.get(url)
-#     r.html.render(sleep=1)
-#     spec_list = []
-#     xpath_list = get_xpath_list()
-#     for xpath_item in xpath_list:
-#         try:
-#             data = r.html.xpath(xpath_item, first=True).text
-#             spec_list.append(data)
-#         except:
-#             break
-#     # product['row_1'] = r.html.xpath('//*[@id="product-specification-table"]/tbody/tr[1]', first=True).text
-
-#     spec_dict = get_spec_dict(spec_list)
-    
-#     return spec_dict
 
 # define fn that gets number of pages
 
