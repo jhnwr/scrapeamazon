@@ -61,15 +61,7 @@ def scrape_info(url):
         product['shipping'] = 'unable to get shipping info'
     
     #get prod_details
-    xpath = r'//*[@id="detailBullets_feature_div"]/ul/li/span'
-    prod_details = r.html.xpath(xpath)
-    details_dict = {}
-    for prod in prod_details:
-        try:
-            key, val = prod.text.split(' : ')
-            details_dict[key] = val
-        except:
-            pass
+    details_dict = get_prod_details(r)
     product.update(details_dict)
     
     # get spec_list
