@@ -111,4 +111,5 @@ def get_prod_urls(search_url):
 
 # define fn that gets all dept urls from all search
 
+
 #need to either remove sponsored pages, or scrape seller from the page
