@@ -27,6 +27,19 @@ def get_xpath_list():
         
     return xpath_list
 
+def get_prod_details(r):
+    xpath = r'//*[@id="detailBullets_feature_div"]/ul/li/span'
+    prod_details = r.html.xpath(xpath)
+    details_dict = {}
+    for prod in prod_details:
+        try:
+            key, val = prod.text.split(' : ')
+            details_dict[key] = val
+        except:
+            pass
+    
+    return details_dict
+
 #add element of seller - get //*[@id="bylineInfo"] and then get the href and get get store after /stores/
 def scrape_info(url):
     s = HTMLSession()
@@ -52,8 +65,11 @@ def scrape_info(url):
     prod_details = r.html.xpath(xpath)
     details_dict = {}
     for prod in prod_details:
-        key, val = prod.text.split(' : ')
-        details_dict[key] = val
+        try:
+            key, val = prod.text.split(' : ')
+            details_dict[key] = val
+        except:
+            pass
     product.update(details_dict)
     
     # get spec_list
