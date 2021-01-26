@@ -15,8 +15,11 @@ for search_url in search_list[:1]:
     prod_urls = get_prod_urls(search_url)
     for prod_url in prod_urls:
         print('Scraping URL: ', prod_url)
-        prod_info.append(scrape_info(prod_url))
-        sleep(1)
+        try:
+            prod_info.append(scrape_info(prod_url))
+        except:
+            pass
+        sleep(5)
 
 i = 0
 df_list = []
