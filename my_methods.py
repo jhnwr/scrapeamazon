@@ -40,6 +40,18 @@ def get_prod_details(r):
     
     return details_dict
 
+def get_items_from_list(r, xpath, delimiter):
+
+    scrape_dict = {}
+    nodes = r.html.xpath(xpath)
+    for node in nodes:
+        try:
+            key, val = node.text.split(delimiter)
+            scrape_dict[key] = val
+        except:
+            pass
+    return scrape_dict
+
 def get_spec_list(r):
     spec_list = []
     xpath_list = get_xpath_list()
@@ -72,8 +84,19 @@ def scrape_info(url):
         product['shipping'] = 'unable to get shipping info'
     
     #get prod_details
-    details_dict = get_prod_details(r)
+    xpath = r'//*[@id="detailBullets_feature_div"]/ul/li/span'
+    details_dict = get_items_from_list(r, xpath, ' : ')
     product.update(details_dict)
+    
+    #get technical details
+    xpath = r'//*[@id="productDetails_techSpec_section_1"]/tbody/tr'
+    tech_dict = get_items_from_list(r, xpath, '\n')
+    product.update(tech_dict)
+    
+    #get additional info
+    xpath = r'//*[@id="productDetails_detailBullets_sections1"]/tbody/tr'
+    tech_dict = get_items_from_list(r, xpath, '\n')
+    product.update(tech_dict)
     
     # get spec_list
     spec_list = get_spec_list(r)
