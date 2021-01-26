@@ -99,8 +99,8 @@ def scrape_info(url):
     product.update(tech_dict)
     
     # get spec_list
-    spec_list = get_spec_list(r)
-    spec_dict = get_spec_dict(spec_list)    
+    xpath = r'//*[@id="product-specification-table"]/tbody/tr'
+    spec_dict = get_items_from_list(r, xpath, '\n')   
     product.update(spec_dict)
     
     return product
