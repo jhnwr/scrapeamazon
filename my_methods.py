@@ -40,7 +40,7 @@ def get_prod_details(r):
     
     return details_dict
 
-def get_items_from_list(r, xpath, delimiter):
+def get_items_from_list(r, xpath, delimiter = '\n'):
 
     scrape_dict = {}
     nodes = r.html.xpath(xpath)
@@ -51,17 +51,6 @@ def get_items_from_list(r, xpath, delimiter):
         except:
             pass
     return scrape_dict
-
-def get_spec_list(r):
-    spec_list = []
-    xpath_list = get_xpath_list()
-    for xpath_item in xpath_list:
-        try:
-            data = r.html.xpath(xpath_item, first=True).text
-            spec_list.append(data)
-        except:
-            break
-    return spec_list
 
 #add element of seller - get //*[@id="bylineInfo"] and then get the href and get get store after /stores/
 def scrape_info(url):
