@@ -1,44 +1,15 @@
 from requests_html import HTMLSession
 import pandas as pd
 
-def get_spec_dict(spec_list):
-    spec_dict = {}
-    for row in spec_list:
-        
-        row = row.split('\n')
-        key = row[0]
-        try:
-            val = str(row[1])
-        except:
-            val = None
-        spec_dict[key] = val
+def get_path_delimiter():
 
-    return spec_dict
-
-def get_xpath_list():
-
-    xpath_first_half = r'//*[@id="product-specification-table"]/tbody/tr['
-    xpath_second_half = r']'
-
-    xpath_list = []
-    for i in range(1,20):
-        xpath = xpath_first_half + str(i) + xpath_second_half
-        xpath_list.append(xpath)
-        
-    return xpath_list
-
-def get_prod_details(r):
-    xpath = r'//*[@id="detailBullets_feature_div"]/ul/li/span'
-    prod_details = r.html.xpath(xpath)
-    details_dict = {}
-    for prod in prod_details:
-        try:
-            key, val = prod.text.split(' : ')
-            details_dict[key] = val
-        except:
-            pass
-    
-    return details_dict
+    path_delimiter = [
+        (r'//*[@id="detailBullets_feature_div"]/ul/li/span', ' : '),
+        (r'//*[@id="productDetails_techSpec_section_1"]/tbody/tr', '\n'),
+        (r'//*[@id="productDetails_detailBullets_sections1"]/tbody/tr', '\n'),
+        (r'//*[@id="product-specification-table"]/tbody/tr', '\n')
+    ]
+    return path_delimiter
 
 def get_items_from_list(r, xpath, delimiter = '\n'):
 
@@ -71,26 +42,13 @@ def scrape_info(url):
         product['shipping'] = r.html.xpath('//*[@id="price-shipping-message"]/b', first=True).text
     except:
         product['shipping'] = 'unable to get shipping info'
-    
-    #get prod_details
-    xpath = r'//*[@id="detailBullets_feature_div"]/ul/li/span'
-    details_dict = get_items_from_list(r, xpath, ' : ')
-    product.update(details_dict)
-    
-    #get technical details
-    xpath = r'//*[@id="productDetails_techSpec_section_1"]/tbody/tr'
-    tech_dict = get_items_from_list(r, xpath, '\n')
-    product.update(tech_dict)
-    
-    #get additional info
-    xpath = r'//*[@id="productDetails_detailBullets_sections1"]/tbody/tr'
-    tech_dict = get_items_from_list(r, xpath, '\n')
-    product.update(tech_dict)
-    
-    # get spec_list
-    xpath = r'//*[@id="product-specification-table"]/tbody/tr'
-    spec_dict = get_items_from_list(r, xpath, '\n')   
-    product.update(spec_dict)
+        
+    # get items from tables
+    path_delimiter = get_path_delimiter()
+    for thing in path_delimiter:
+        xpath, delimiter = thing
+        list_dict = get_items_from_list(r, xpath, delimiter)
+        product.update(list_dict)
     
     return product
 
