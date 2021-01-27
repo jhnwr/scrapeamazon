@@ -10,7 +10,7 @@ start_time = time()
 
 url_all_depts = r'https://www.amazon.com/s?k=medline'
 xpath = r'//*[@id="departments"]/ul'
-dept_urls = s.get_dept_urls(url_all_depts)
+dept_urls = s.get_dept_urls(url_all_depts, xpath)
 
 dept_url = dept_urls[0]
 

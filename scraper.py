@@ -76,6 +76,7 @@ def scrape_info(url):
 
 # define fn that gets all search url pages from dept url
 # TODO add funcationality to stop (e.g. page 155 DNE for alot of depts)
+# This function actually does not work anymore
 def get_search_urls(dept_url, num_pages = 155):
 
     url_list = []

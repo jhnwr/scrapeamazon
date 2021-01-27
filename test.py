@@ -1,19 +1,41 @@
 from requests_html import HTMLSession
-from my_methods import get_search_urls, get_prod_urls, scrape_info, get_items_from_list, get_path_delimiter
+import scraper as s
 from time import sleep, time
 import pandas as pd
 # TODO create method to get a url list
 # This will also need to be a slow cralwer so as not to get detected
 
-url1 = r'https://www.amazon.com/Medline-Remedy-Unscented-Olivamine-Repair/dp/B008107QBM/ref=sr_1_8?dchild=1&keywords=medline&qid=1611687162&s=hpc&sr=1-8&th=1'
-url2 = r'https://www.amazon.com/Medline-Remedy-Phytoplex-Nourishing-Cream/dp/B00C0LPCZ0/ref=psdc_11060681_t1_B008107QBM'
-url_spec_box = r'https://www.amazon.com/Medline-Disposable-incontinence-Furniture-Protection/dp/B075HKJZ2R/ref=sr_1_2?dchild=1&keywords=medline&qid=1611690950&s=hpc&sr=1-2'
+# def fn that gets number of pages in dept
+# grab the text of the num pages
+# go to that page - 1
+# grab text of num pages
+# got to that page -1
+# continue until text is not present
+
+url = r'https://www.amazon.com/s?k=medline&rh=n%3A3760901&dc&qid=1611784120&rnid=2941120011&ref=sr_nr_n_1'
 
 
+flag = True
+i = 1
+while flag == True and i < 200:
+    
+    s = HTMLSession()
+    r = s.get(url)
+    r.html.render(sleep=3)
+    url = r.html.next()
+    if 'ajax_err' in url:
+        flag = False
+    print('On page: ', str(i), ' URL: ', url)
+    i+=1
+    
 
-prod = scrape_info(url1)
 
-path_out = r'/Users/ryancheng/Projects/scrapeamazon/df_results_TEST.csv'
+# ajax_error = 'https://www.amazon.com/gp/prime/ref=nav_prime_ajax_err/146-8293514-4870441'
+# 'ajax_err' in ajax_error
 
-df = pd.DataFrame(prod, index = [0])
-df.to_csv(path_out)
+# dept_url_base_cleaned = dept_url_base.split('&qid=')[0]
+# dept_url_base_cleaned = dept_url_base_cleaned + '&page='
+# num_pages = 154
+# for i in range(2,num_pages):
+#     print(dept_url_base_cleaned + str(i))
+    
