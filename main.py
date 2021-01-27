@@ -1,22 +1,29 @@
 from requests_html import HTMLSession
-from my_methods import get_search_urls, get_prod_urls, scrape_info
+import scraper as s
 from time import sleep, time
 import pandas as pd
 start_time = time()
 
 # define fn that gets all product_urls from a search_url
 
-dept_url = r'https://www.amazon.com/s?k=medline&i=hpc&rh=n%3A3760901&page='
-search_list = get_search_urls(dept_url)
+# dept_url = r'https://www.amazon.com/s?k=medline&i=hpc&rh=n%3A3760901&page='
+
+url_all_depts = r'https://www.amazon.com/s?k=medline'
+xpath = r'//*[@id="departments"]/ul'
+dept_urls = s.get_dept_urls(url_all_depts)
+
+dept_url = dept_urls[0]
+
+search_list = s.get_search_urls(dept_url)
 
 prod_info = []
 for search_url in search_list[:1]:
     
-    prod_urls = get_prod_urls(search_url)
+    prod_urls = s.get_prod_urls(search_url)
     for prod_url in prod_urls:
         print('Scraping URL: ', prod_url)
         try:
-            prod_info.append(scrape_info(prod_url))
+            prod_info.append(s.scrape_info(prod_url))
         except:
             pass
         sleep(5)
