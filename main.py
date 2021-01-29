@@ -1,12 +1,11 @@
 from requests_html import HTMLSession
 import scraper as s
-from time import sleep, time
+from time import sleep
 import pandas as pd
-start_time = time()
 url_all_depts = r'https://www.amazon.com/s?k=medline'
 xpath = r'//*[@id="departments"]/ul'
 dept_urls = s.get_dept_urls(url_all_depts, xpath)
-max_depts, max_pages, max_prods = 1 , 1, 1
+max_depts, max_pages, max_prods = 1 , 1, 3
 prod_info = []
 for dept_url in dept_urls[:max_depts]:
     print('Scraping DEPT: ', dept_url)
@@ -36,5 +35,19 @@ df = pd.concat(df_list)
 path_out = r'/Users/ryancheng/Projects/medline_scraper/df_results.csv'
 df.to_csv(path_out)
 
-exec_time = time() - start_time
-print('Scraping completed in: ', exec_time, ' seconds.')
+
+
+
+print('Finished!')
+
+
+
+print('Finished!')
+
+
+
+print('Finished!')
+
+
+
+print('Finished!')
