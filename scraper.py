@@ -2,17 +2,20 @@ from requests_html import HTMLSession
 import pandas as pd
 
 # define fn that gets all dept urls from all search
+
+sleep = 1
+
 def get_next_page(page_url):
     s = HTMLSession()
     r = s.get(page_url)
-    r.html.render(sleep=5)
+    r.html.render(sleep=sleep)
     page_url = r.html.next()
     return page_url
 
 def get_dept_urls(url_all_depts, xpath):
     s = HTMLSession()
     r = s.get(url_all_depts)
-    r.html.render(sleep = 1)
+    r.html.render(sleep = sleep)
     node = r.html.xpath(xpath, first = True)
     lis = node.find('li')
     
@@ -54,7 +57,7 @@ def get_items_from_list(r, xpath, delimiter = '\n'):
 def scrape_info(url):
     s = HTMLSession()
     r = s.get(url)
-    r.html.render(sleep=1)
+    r.html.render(sleep=sleep)
     #get product_dict
     product = {}
     product['url'] = url
@@ -81,24 +84,12 @@ def scrape_info(url):
 
 # define fn that gets number of pages
 
-# define fn that gets all search url pages from dept url
-# TODO add funcationality to stop (e.g. page 155 DNE for alot of depts)
-# This function actually does not work anymore
-def get_search_urls(dept_url, num_pages = 155):
-
-    url_list = []
-    for i in range(1,num_pages):
-        url = dept_url + str(i)
-        url_list.append(url)
-        
-    return url_list
-
 # define fn that gets all product_urls from a search_url
 def get_prod_urls(search_url):
 
     s = HTMLSession()
     r = s.get(search_url)
-    r.html.render(sleep=1)
+    r.html.render(sleep=sleep)
 
     xpath = r'//*[@id="search"]/div[1]/div[2]/div/span[3]/div[2]/div'
 
