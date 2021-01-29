@@ -11,22 +11,22 @@ start_time = time()
 url_all_depts = r'https://www.amazon.com/s?k=medline'
 xpath = r'//*[@id="departments"]/ul'
 dept_urls = s.get_dept_urls(url_all_depts, xpath)
-
-dept_url = dept_urls[0]
-
-search_list = s.get_search_urls(dept_url)
-
+max_pages = 200
 prod_info = []
-for search_url in search_list[:1]:
-    
-    prod_urls = s.get_prod_urls(search_url)
-    for prod_url in prod_urls:
-        print('Scraping URL: ', prod_url)
-        try:
-            prod_info.append(s.scrape_info(prod_url))
-        except:
-            pass
-        sleep(5)
+for dept_url in dept_urls:
+    page_url = dept_url
+    for i in range(max_pages):
+        prod_urls = s.get_prod_urls(page_url)
+        for prod_url in prod_urls:
+            print('Scraping URL: ', prod_url)
+            try:
+                prod_info.append(s.scrape_info(prod_url))
+            except:
+                pass
+            sleep(5)
+        page_url = s.get_next_page(page_url)
+        if 'medline' not in page_url:
+            break
 
 i = 0
 df_list = []

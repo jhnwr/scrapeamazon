@@ -2,6 +2,13 @@ from requests_html import HTMLSession
 import pandas as pd
 
 # define fn that gets all dept urls from all search
+def get_next_page(page_url):
+    s = HTMLSession()
+    r = s.get(page_url)
+    r.html.render(sleep=5)
+    page_url = r.html.next()
+    return page_url
+
 def get_dept_urls(url_all_depts, xpath):
     s = HTMLSession()
     r = s.get(url_all_depts)

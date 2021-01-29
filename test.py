@@ -12,30 +12,23 @@ import pandas as pd
 # got to that page -1
 # continue until text is not present
 
-url = r'https://www.amazon.com/s?k=medline&rh=n%3A3760901&dc&qid=1611784120&rnid=2941120011&ref=sr_nr_n_1'
+page_url = r'https://www.amazon.com/s?k=medline&rh=n%3A3760901&dc&qid=1611784120&rnid=2941120011&ref=sr_nr_n_1'
+page_url = r'https://www.amazon.com/s?k=medline&i=hpc&rh=n%3A3760901&dc&page=111&qid=1611961390&rnid=2941120011&ref=sr_pg_111'
 
-
-flag = True
-i = 1
-while flag == True and i < 200:
+for i in range(200):
     
     s = HTMLSession()
-    r = s.get(url)
+    r = s.get(page_url)
     r.html.render(sleep=3)
-    url = r.html.next()
-    if 'ajax_err' in url:
-        flag = False
-    print('On page: ', str(i), ' URL: ', url)
-    i+=1
-    
+    page_url = r.html.next()
 
+    print('On page: ', str(i), ' URL: ', page_url)    
+    if 'medline' not in page_url:
+        break
 
-# ajax_error = 'https://www.amazon.com/gp/prime/ref=nav_prime_ajax_err/146-8293514-4870441'
-# 'ajax_err' in ajax_error
-
-# dept_url_base_cleaned = dept_url_base.split('&qid=')[0]
-# dept_url_base_cleaned = dept_url_base_cleaned + '&page='
-# num_pages = 154
-# for i in range(2,num_pages):
-#     print(dept_url_base_cleaned + str(i))
-    
+def get_next_page(page_url):
+    s = HTMLSession()
+    r = s.get(page_url)
+    r.html.render(sleep=5)
+    page_url = r.html.next()
+    return page_url
