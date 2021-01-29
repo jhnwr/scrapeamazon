@@ -11,14 +11,16 @@ start_time = time()
 url_all_depts = r'https://www.amazon.com/s?k=medline'
 xpath = r'//*[@id="departments"]/ul'
 dept_urls = s.get_dept_urls(url_all_depts, xpath)
-max_pages = 200
+max_pages = 3
 prod_info = []
-for dept_url in dept_urls:
+for dept_url in dept_urls[:3]:
+    print('Scraping DEPT: ', dept_url)
     page_url = dept_url
     for i in range(max_pages):
+        print('Scraping PAGE: ', page_url)
         prod_urls = s.get_prod_urls(page_url)
-        for prod_url in prod_urls:
-            print('Scraping URL: ', prod_url)
+        for prod_url in prod_urls[:1]:
+            print('Scraping PROD: ', prod_url)
             try:
                 prod_info.append(s.scrape_info(prod_url))
             except:
@@ -37,9 +39,10 @@ for prod in prod_info:
     
 df = pd.concat(df_list)
 
-path_out = r'/Users/ryancheng/Projects/scrapeamazon/df_results.csv'
+path_out = r'/Users/ryancheng/Projects/medline_scraper/df_results.csv'
 
 df.to_csv(path_out)
 
 exec_time = time() - start_time
 print('Scraping completed in: ', exec_time, ' seconds.')
+
