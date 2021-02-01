@@ -3,7 +3,7 @@ import pandas as pd
 
 # define fn that gets all dept urls from all search
 
-sleep = 1
+sleep = 3
 
 def get_next_page(page_url):
     s = HTMLSession()
@@ -13,12 +13,13 @@ def get_next_page(page_url):
     return page_url
 
 def get_dept_urls(url_all_depts, xpath):
+
     s = HTMLSession()
     r = s.get(url_all_depts)
     r.html.render(sleep = sleep)
     node = r.html.xpath(xpath, first = True)
+
     lis = node.find('li')
-    
     dept_url_list = []
     for li in lis:
 
