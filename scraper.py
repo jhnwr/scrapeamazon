@@ -27,7 +27,10 @@ def get_dept_urls(url_all_depts, xpath):
         href = a.attrs['href']
         url_base = r'https://www.amazon.com'
         dept_url = url_base + href
-        dept_url_list.append(dept_url)
+        dept_name = li.text
+        dept_name = ''.join(e for e in dept_name if e.isalnum())
+        name_url_pair = (dept_name, dept_url)
+        dept_url_list.append(name_url_pair)
         
     return dept_url_list
 
@@ -107,4 +110,13 @@ def get_prod_urls(search_url):
 
     return prod_url_list
 
-#need to either remove sponsored pages, or scrape seller from the page
+def prod_info_to_csv(prod_info, path_out):
+    i = 0
+    df_list = []
+    for prod in prod_info:
+        df = pd.DataFrame(prod, index = [i])
+        df_list.append(df)
+        i+=1
+
+    df = pd.concat(df_list)
+    df.to_csv(path_out)
