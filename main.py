@@ -1,11 +1,11 @@
 from requests_html import HTMLSession
 import scraper as s
-from time import sleep
 import pandas as pd
 url_all_depts = r'https://www.amazon.com/s?k=medline'
+path_out = r'/Users/ryancheng/Projects/medline_scraper/df_results.csv'
 xpath = r'//*[@id="departments"]/ul'
 dept_urls = s.get_dept_urls(url_all_depts, xpath)
-max_depts, max_pages, max_prods = 1 , 1, 3
+max_depts, max_pages, max_prods = 2, 2, 2
 prod_info = []
 for dept_url in dept_urls[:max_depts]:
     print('Scraping DEPT: ', dept_url)
@@ -19,7 +19,7 @@ for dept_url in dept_urls[:max_depts]:
                 prod_info.append(s.scrape_info(prod_url))
             except:
                 pass
-            sleep(5)
+            # sleep(5)
         page_url = s.get_next_page(page_url)
         if 'medline' not in page_url:
             break
@@ -31,23 +31,4 @@ for prod in prod_info:
     df_list.append(df)
     i+=1
 df = pd.concat(df_list)
-
-path_out = r'/Users/ryancheng/Projects/medline_scraper/df_results.csv'
 df.to_csv(path_out)
-
-
-
-
-print('Finished!')
-
-
-
-print('Finished!')
-
-
-
-print('Finished!')
-
-
-
-print('Finished!')
